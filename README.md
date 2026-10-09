@@ -11,8 +11,10 @@ Orientiert sich am Dichterechner [block-density-qc](https://github.com/Sebastian
 
 1. **Höhe** – je Brett kleinster und größter Wert in mm (Start 209, Schritt 1 mm). Toleranz 205–213 mm
    wird farbig angezeigt.
-2. **Frischdichte** – Steintyp I3/I2 (setzt das Standardgewicht 13 kg bzw. 9 kg), je ein Stein vorne
-   und hinten mit Gewicht (Schritt 0,1 kg) und Höhe (Start 209 mm). Dichte wie im Dichterechner.
+2. **Frischdichte** – Steintyp I3/I2 (setzt das Standardgewicht 13 kg bzw. 9 kg), je Reihe ein Stein mit
+   Gewicht (Schritt 0,1 kg) und Höhe (Start 209 mm): I3 vorne/hinten, I2 vorne/Mitte/hinten. Je Stein ein
+   Schalter „gemessen / nicht gemessen“; nicht gemessene Steine werden leer gespeichert, mindestens einer
+   muss gemessen sein. Dichte wie im Dichterechner.
 3. **Brettdichte** – Brett-Layout (I3: 2 Reihen × 6, I2: 3 Reihen × 6, im Tab änderbar). Stein antippen →
    Popup mit Gewicht und Höhe, „Weiter →“ springt zum nächsten leeren Stein.
 
@@ -45,7 +47,7 @@ CSV: UTF-8 mit BOM, Trennzeichen `;`, Dezimalkomma (öffnet direkt in Excel). Ei
 | `eintrag_id` | eindeutige ID des Eintrags (ein Brett = mehrere Zeilen mit derselben ID) |
 | `steintyp` | `I2` / `I3` |
 | `brett_nr`, `layout` | nur Brettdichte, Layout als `Reihen x Steine`, z. B. `2x6` |
-| `position` | Frischdichte `vorne`/`hinten`; Brettdichte `R1-S1` (Reihe 1 = vorne, Stein 1 = links) |
+| `position` | Frischdichte `vorne`/`mitte`/`hinten` (Mitte nur I2, nicht gemessen = Werte leer); Brettdichte `R1-S1` (Reihe 1 = vorne, Stein 1 = links) |
 | `min_mm`, `max_mm` | nur Höhe |
 | `gewicht_kg`, `hoehe_mm`, `dichte` | Frisch- und Brettdichte |
 | `geaendert` | Zeitpunkt der letzten Bearbeitung, sonst leer |

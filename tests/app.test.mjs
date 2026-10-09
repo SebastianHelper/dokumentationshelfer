@@ -108,9 +108,95 @@ test('Frischdichte: Steintyp setzt Standardgewicht, Dichte wie Dichterechner', (
   a.click('#save-btn');
   const csv = a.w.buildCsv();
   const lines = csv.trim().split('\r\n');
-  assert.equal(lines.length, 3);
+  assert.equal(lines.length, 4, 'I2: drei Steine');
   assert.match(lines[1], /;frischdichte;.*;I2;;;vorne;;;9,00;209;1,389;/);
-  assert.match(lines[2], /;hinten;;;9,20;209;1,420;/);
+  assert.match(lines[2], /;mitte;;;9,00;209;1,389;/);
+  assert.match(lines[3], /;hinten;;;9,20;209;1,420;/);
+});
+
+const visibleCards = (a) => [...a.w.document.querySelectorAll('.stone-card')].filter((c) => !c.hidden)
+  .map((c) => c.querySelector('h2').textContent);
+
+test('Frischdichte: I3 zwei Steine, I2 drei Steine mit klarer Beschriftung', () => {
+  const a = named();
+  a.click('[data-tab="frisch"]');
+  assert.deepEqual(visibleCards(a), ['Stein vorne (Reihe 1)', 'Stein hinten (Reihe 2)']);
+  a.select('#frisch-typ', 'I2');
+  assert.deepEqual(visibleCards(a), ['Stein vorne (Reihe 1)', 'Stein Mitte (Reihe 2)', 'Stein hinten (Reihe 3)']);
+  a.click('#save-btn');
+  assert.deepEqual(Object.keys(a.store().entries[0].data), ['typ', 'vorne', 'mitte', 'hinten']);
+  a.select('#frisch-typ', 'I3');
+  a.click('#save-btn');
+  assert.deepEqual(Object.keys(a.store().entries[1].data), ['typ', 'vorne', 'hinten']);
+});
+
+test('Frischdichte: nicht gemessener Stein wird leer gespeichert, Schalter übersteht Neuladen', () => {
+  const a = named();
+  a.click('[data-tab="frisch"]');
+  a.select('#frisch-typ', 'I2');
+  a.click('[data-toggle="mitte"]');
+  const card = a.$('.stone-card[data-pos="mitte"]');
+  assert.ok(card.classList.contains('off'));
+  assert.equal(a.$('[data-toggle="mitte"]').textContent, 'nicht gemessen');
+
+  const b = boot(a.saved());
+  assert.ok(b.$('.stone-card[data-pos="mitte"]').classList.contains('off'));
+  b.click('#save-btn');
+  const d = b.store().entries[0].data;
+  assert.equal(d.mitte, null);
+  assert.deepEqual(d.vorne, { g: 9, h: 209 });
+  const lines = b.w.buildCsv().trim().split('\r\n');
+  assert.equal(lines.length, 4);
+  assert.match(lines[2], /;I2;;;mitte;;;;;;/, 'Gewicht, Höhe und Dichte leer statt Standardwert');
+  assert.match(b.$('#last-line').textContent, /Mitte –/);
+
+  // Rundreise über CSV: leerer Stein bleibt leer
+  const c = named('Gerät C');
+  c.importCsv(b.w.buildCsv());
+  assert.deepEqual(c.store().entries[0].data, d);
+});
+
+test('Frischdichte: ohne gemessenen Stein wird nicht gespeichert', () => {
+  const a = named();
+  a.click('[data-tab="frisch"]');
+  a.click('[data-toggle="vorne"]');
+  a.click('[data-toggle="hinten"]');
+  a.click('#save-btn');
+  assert.equal(a.store().entries.length, 0);
+  assert.match(a.$('#toast-text').textContent, /Mindestens einen Stein/);
+  a.click('[data-toggle="hinten"]');
+  a.click('#save-btn');
+  assert.equal(a.store().entries.length, 1);
+  assert.equal(a.store().entries[0].data.vorne, null);
+});
+
+test('Frischdichte: Bearbeiten zeigt nicht gemessene Steine als aus und kann sie nachtragen', () => {
+  const a = named();
+  a.click('[data-tab="frisch"]');
+  a.click('[data-toggle="hinten"]');
+  a.click('#save-btn');
+  const id = a.store().entries[0].id;
+  a.click('[data-toggle="hinten"]'); // Entwurf wieder an
+  a.click('#history-btn');
+  a.$(`[data-edit="${id}"]`).click();
+  assert.ok(a.$('.stone-card[data-pos="hinten"]').classList.contains('off'));
+  a.click('[data-toggle="hinten"]');
+  a.minus('frisch', 'hinten.g', 3);
+  a.click('#save-btn');
+  assert.deepEqual(a.store().entries[0].data.hinten, { g: 12.7, h: 209 });
+  assert.equal(a.store().draft.frisch.hinten.off, false);
+});
+
+test('Gespeicherter Stand der Version 1.0 (ohne Mitte/Schalter) lädt weiter', () => {
+  const old = JSON.parse(named().saved());
+  old.draft.frisch = { typ: 'I3', vorne: { g: 12.5, h: 210 }, hinten: { g: 13.2, h: 208 } };
+  old.entries = [{ id: 'x1', ts: '2026-10-09T12:00:00+02:00', device: 'A', kind: 'frisch', data: old.draft.frisch }];
+  const a = boot(JSON.stringify(old));
+  a.click('[data-tab="frisch"]');
+  assert.equal(a.shown('frisch', 'vorne.g'), '12,5');
+  a.select('#frisch-typ', 'I2');
+  assert.equal(a.shown('frisch', 'mitte.g'), '9,0');
+  assert.match(a.w.buildCsv(), /;hinten;;;13,20;208;/);
 });
 
 test('Brettdichte: I3 = 2×6, I2 = 3×6, Popup mit Weiter, Entwurf übersteht Neuladen', () => {

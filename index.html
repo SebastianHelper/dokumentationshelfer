@@ -146,6 +146,27 @@ main { flex: 1; padding: 0.6rem 0.75rem; touch-action: pan-y; }
   gap: 0.5rem;
 }
 .card h2 { margin: 0; font-size: 0.95rem; }
+.card-head { display: flex; align-items: center; gap: 0.5rem; }
+.card-head h2 { flex: 1; min-width: 0; }
+.toggle {
+  min-width: 8.5rem;
+  padding: 0 0.7rem;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--pass-line);
+  background: var(--pass-bg);
+  color: var(--pass-ink);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.toggle::before { content: '✓ '; }
+.stone-card.off { background: #f1efea; border-style: dashed; }
+.stone-card.off h2 { color: var(--muted); }
+.stone-card.off .toggle { border-color: var(--line); background: #fff; color: var(--muted); }
+.stone-card.off .toggle::before { content: '✕ '; }
+.stone-card.off .stone-fields { display: none; }
+.stone-card:not(.off) .off-hint { display: none; }
+.off-hint { margin: 0; font-size: 0.82rem; color: var(--muted); }
 .field { display: flex; flex-direction: column; gap: 0.3rem; }
 .lbl {
   font-size: 0.72rem;
@@ -396,21 +417,41 @@ select {
         <select id="frisch-typ"><option value="I3">I3</option><option value="I2">I2</option></select>
       </label>
     </div>
-    <div class="card">
-      <h2>Stein vorne</h2>
-      <div class="field"><span class="lbl">Gewicht</span>
-        <div class="stepper small" data-src="frisch" data-path="vorne.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
-      <div class="field"><span class="lbl">Höhe</span>
-        <div class="stepper small" data-src="frisch" data-path="vorne.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
-      <span class="status" data-density="frisch.vorne"></span>
+    <div class="card stone-card" data-pos="vorne">
+      <div class="card-head"><h2 data-pos-title="vorne">Stein</h2>
+        <button type="button" class="toggle" data-toggle="vorne" aria-pressed="true">gemessen</button></div>
+      <div class="stone-fields">
+        <div class="field"><span class="lbl">Gewicht</span>
+          <div class="stepper small" data-src="frisch" data-path="vorne.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+        <div class="field"><span class="lbl">Höhe</span>
+          <div class="stepper small" data-src="frisch" data-path="vorne.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+        <span class="status" data-density="frisch.vorne"></span>
+      </div>
+      <p class="off-hint">Nicht gemessen – wird leer gespeichert.</p>
     </div>
-    <div class="card">
-      <h2>Stein hinten</h2>
-      <div class="field"><span class="lbl">Gewicht</span>
-        <div class="stepper small" data-src="frisch" data-path="hinten.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
-      <div class="field"><span class="lbl">Höhe</span>
-        <div class="stepper small" data-src="frisch" data-path="hinten.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
-      <span class="status" data-density="frisch.hinten"></span>
+    <div class="card stone-card" data-pos="mitte">
+      <div class="card-head"><h2 data-pos-title="mitte">Stein</h2>
+        <button type="button" class="toggle" data-toggle="mitte" aria-pressed="true">gemessen</button></div>
+      <div class="stone-fields">
+        <div class="field"><span class="lbl">Gewicht</span>
+          <div class="stepper small" data-src="frisch" data-path="mitte.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+        <div class="field"><span class="lbl">Höhe</span>
+          <div class="stepper small" data-src="frisch" data-path="mitte.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+        <span class="status" data-density="frisch.mitte"></span>
+      </div>
+      <p class="off-hint">Nicht gemessen – wird leer gespeichert.</p>
+    </div>
+    <div class="card stone-card" data-pos="hinten">
+      <div class="card-head"><h2 data-pos-title="hinten">Stein</h2>
+        <button type="button" class="toggle" data-toggle="hinten" aria-pressed="true">gemessen</button></div>
+      <div class="stone-fields">
+        <div class="field"><span class="lbl">Gewicht</span>
+          <div class="stepper small" data-src="frisch" data-path="hinten.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+        <div class="field"><span class="lbl">Höhe</span>
+          <div class="stepper small" data-src="frisch" data-path="hinten.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+        <span class="status" data-density="frisch.hinten"></span>
+      </div>
+      <p class="off-hint">Nicht gemessen – wird leer gespeichert.</p>
     </div>
   </section>
 
@@ -509,7 +550,7 @@ select {
 
 <script>
 'use strict';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const KEY = 'dokumentationshelfer.v1';
 
 // Standardwerte und Dichte wie im Dichterechner (SebastianHelper/block-density-qc):
@@ -520,6 +561,9 @@ const TYPES = {
 };
 const HEIGHT_DEFAULT = 209;
 const TOL = { min: 205, max: 213 }; // 209 ±4 (Vorgabe) = 208 −3/+5 (Norm)
+// Frischdichte: je Steintyp ein Stein pro Reihe (I3 2 Reihen, I2 3 Reihen)
+const FRISCH_POS = { I3: ['vorne', 'hinten'], I2: ['vorne', 'mitte', 'hinten'] };
+const POS_LABEL = { vorne: 'vorne', mitte: 'Mitte', hinten: 'hinten' };
 const KIND_LABEL = { hoehe: 'Höhe', frisch: 'Frischdichte', brett: 'Brettdichte' };
 const CSV_KIND = { hoehe: 'hoehe', frisch: 'frischdichte', brett: 'brettdichte' };
 const CSV_COLS = ['zeitstempel', 'geraet', 'messung', 'eintrag_id', 'steintyp', 'brett_nr', 'layout', 'position',
@@ -536,6 +580,26 @@ function newBoard(typ, nr, layouts) {
   return { typ, nr, rows: l.rows, cols: l.cols, stones: Array(l.rows * l.cols).fill(null) };
 }
 
+// Formular der Frischdichte: alle drei Positionen, `off` = nicht gemessen.
+// Gespeicherte Einträge enthalten nur die Positionen des Steintyps, nicht gemessene als null.
+function frischForm(data) {
+  const typ = TYPES[data.typ] ? data.typ : 'I3';
+  const f = { typ };
+  for (const p of ['vorne', 'mitte', 'hinten']) {
+    const s = data[p];
+    f[p] = s && s.g != null
+      ? { g: s.g, h: s.h != null ? s.h : HEIGHT_DEFAULT, off: !!s.off }
+      : { g: TYPES[typ].weight, h: HEIGHT_DEFAULT, off: s === null || (s && s.g == null) };
+  }
+  return f;
+}
+
+function frischData(f) {
+  const d = { typ: f.typ };
+  for (const p of FRISCH_POS[f.typ]) d[p] = f[p].off ? null : { g: f[p].g, h: f[p].h };
+  return d;
+}
+
 function defaultStore() {
   const layouts = { I3: { ...TYPES.I3.layout }, I2: { ...TYPES.I2.layout } };
   return {
@@ -548,7 +612,7 @@ function defaultStore() {
     lastExport: null,
     draft: {
       hoehe: { min: HEIGHT_DEFAULT, max: HEIGHT_DEFAULT },
-      frisch: { typ: 'I3', vorne: { g: TYPES.I3.weight, h: HEIGHT_DEFAULT }, hinten: { g: TYPES.I3.weight, h: HEIGHT_DEFAULT } },
+      frisch: frischForm({ typ: 'I3' }),
       brett: newBoard('I3', 1, layouts),
     },
   };
@@ -565,7 +629,7 @@ function load() {
     entries: Array.isArray(s.entries) ? s.entries : [],
     deleted: Array.isArray(s.deleted) ? s.deleted : [],
     layouts: { ...d.layouts, ...(s.layouts || {}) },
-    draft: { ...d.draft, ...(s.draft || {}) },
+    draft: { ...d.draft, ...(s.draft || {}), frisch: frischForm((s.draft && s.draft.frisch) || {}) },
   };
 }
 
@@ -807,7 +871,18 @@ function renderHoehe() {
 function renderFrisch() {
   const f = form('frisch');
   $('#frisch-typ').value = f.typ;
-  for (const p of ['vorne', 'hinten']) {
+  const pos = FRISCH_POS[f.typ];
+  for (const card of $$('.stone-card')) {
+    const p = card.dataset.pos;
+    const i = pos.indexOf(p);
+    card.hidden = i < 0;
+    card.classList.toggle('off', !!f[p].off);
+    card.querySelector('h2').textContent = `Stein ${POS_LABEL[p]} (Reihe ${i + 1})`;
+    const t = card.querySelector('.toggle');
+    t.textContent = f[p].off ? 'nicht gemessen' : 'gemessen';
+    t.setAttribute('aria-pressed', f[p].off ? 'false' : 'true');
+  }
+  for (const p of pos) {
     const s = densityStatus(f[p].g, f[p].h, f.typ);
     const el = document.querySelector(`[data-density="frisch.${p}"]`);
     el.textContent = s.text;
@@ -886,7 +961,9 @@ function renderFooter() {
 function summary(e) {
   const d = e.data;
   if (e.kind === 'hoehe') return `${d.min}–${d.max} mm`;
-  if (e.kind === 'frisch') return `${d.typ} · vorne ${kg(d.vorne.g)} kg/${d.vorne.h} · hinten ${kg(d.hinten.g)} kg/${d.hinten.h}`;
+  if (e.kind === 'frisch') {
+    return `${d.typ} · ` + FRISCH_POS[d.typ].map((p) => `${POS_LABEL[p]} ${d[p] && d[p].g != null ? `${kg(d[p].g)} kg/${d[p].h}` : '–'}`).join(' · ');
+  }
   if (e.kind === 'brett') {
     const st = boardStats(d);
     return `Brett ${d.nr} · ${d.typ} · ${st ? st.n : 0}/${d.stones.length} Steine${st ? ` · Ø ${fmt(st.mean, 2)} kg` : ''}`;
@@ -929,10 +1006,17 @@ $$('.tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab
 $('#frisch-typ').addEventListener('change', (e) => {
   const f = form('frisch');
   f.typ = e.target.value;
-  f.vorne.g = f.hinten.g = TYPES[f.typ].weight;
+  for (const p of ['vorne', 'mitte', 'hinten']) f[p].g = TYPES[f.typ].weight;
   if (!editing) persist();
   render();
 });
+
+$$('[data-toggle]').forEach((b) => b.addEventListener('click', () => {
+  const s = form('frisch')[b.dataset.toggle];
+  s.off = !s.off;
+  if (!editing) persist();
+  render();
+}));
 
 $('#brett-typ').addEventListener('change', (e) => {
   const b = form('brett');
@@ -1028,6 +1112,7 @@ $('#layout-save').addEventListener('click', () => {
 function cleanData(kind, data) {
   const d = copy(data);
   if (kind === 'hoehe' && d.min > d.max) [d.min, d.max] = [d.max, d.min];
+  if (kind === 'frisch') return frischData(d);
   return d;
 }
 
@@ -1045,6 +1130,10 @@ $('#save-btn').addEventListener('click', () => {
     const n = b.stones.filter(Boolean).length;
     if (!n) { toast('Noch kein Stein erfasst'); return; }
     if (n < b.stones.length && !confirm(`Nur ${n} von ${b.stones.length} Steinen erfasst. Trotzdem speichern?`)) return;
+  }
+  if (kind === 'frisch' && !FRISCH_POS[form('frisch').typ].some((p) => !form('frisch')[p].off)) {
+    toast('Mindestens einen Stein als gemessen markieren');
+    return;
   }
 
   if (editing) {
@@ -1085,7 +1174,7 @@ function removeEntry(id) {
 function startEdit(id) {
   const e = store.entries.find((x) => x.id === id);
   if (!e) return;
-  editing = { id, kind: e.kind, data: copy(e.data) };
+  editing = { id, kind: e.kind, data: e.kind === 'frisch' ? frischForm(copy(e.data)) : copy(e.data) };
   store.tab = e.kind;
   $('#history-ov').hidden = true;
   persist();
@@ -1195,9 +1284,13 @@ function entryRows(e) {
   const base = { zeitstempel: e.ts, geraet: e.device || '', messung: CSV_KIND[e.kind], eintrag_id: e.id, geaendert: e.edited || '' };
   if (e.kind === 'hoehe') return [{ ...base, min_mm: d.min, max_mm: d.max }];
   if (e.kind === 'frisch') {
-    return ['vorne', 'hinten'].map((p) => ({
-      ...base, steintyp: d.typ, position: p, gewicht_kg: num(d[p].g, 2), hoehe_mm: d[p].h, dichte: num(density(d[p].g, d[p].h, d.typ), 3),
-    }));
+    return (FRISCH_POS[d.typ] || ['vorne', 'hinten']).map((p) => {
+      const st = d[p] && d[p].g != null ? d[p] : null;
+      return {
+        ...base, steintyp: d.typ, position: p, gewicht_kg: st ? num(st.g, 2) : '', hoehe_mm: st ? st.h : '',
+        dichte: st ? num(density(st.g, st.h, d.typ), 3) : '',
+      };
+    });
   }
   if (e.kind === 'brett') {
     return d.stones.map((s, i) => s && {
@@ -1293,10 +1386,12 @@ function buildEntry(rs) {
   } else if (kind === 'frisch') {
     const typ = TYPES[f.steintyp] ? f.steintyp : 'I3';
     e.data = { typ };
-    for (const p of ['vorne', 'hinten']) {
+    for (const p of FRISCH_POS[typ]) {
       const r = rs.find((x) => x.position === p);
-      e.data[p] = { g: r ? pnum(r.gewicht_kg) : null, h: r ? pnum(r.hoehe_mm) : null };
+      const g = r ? pnum(r.gewicht_kg) : null;
+      e.data[p] = okNum(g) ? { g, h: pnum(r.hoehe_mm) } : null;
     }
+    if (!FRISCH_POS[typ].some((p) => e.data[p])) return null;
   } else {
     const typ = TYPES[f.steintyp] ? f.steintyp : 'I3';
     const m = /^(\d+)x(\d+)$/.exec(f.layout || '');
