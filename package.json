@@ -1,0 +1,11 @@
+{
+  "name": "dokumentationshelfer",
+  "private": true,
+  "description": "Tests für die Single-File-App index.html (die App selbst braucht kein npm).",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.2"
+  }
+}

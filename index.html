@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Dokumentationshelfer</title>
+<style>
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --bg: #f6f4ef;
+  --card: #ffffff;
+  --line: #dfdbd2;
+  --ink: #1f2328;
+  --muted: #6f756f;
+  --brand: #8ea37f;
+  --brand-dark: #4d6643;
+  --brand-soft: #e4eadf;
+  --pass-bg: #edf7ee;
+  --pass-line: #8fbf95;
+  --pass-ink: #2f6b38;
+  --fail-bg: #fbeceb;
+  --fail-line: #d28f89;
+  --fail-ink: #a2362c;
+  --heavy: #3d6fb4;
+  --light: #c8742a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+button, select, input { font: inherit; color: inherit; }
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+[hidden] { display: none !important; }
+
+/* Kopf */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: calc(0.5rem + env(safe-area-inset-top)) 0.75rem 0.4rem;
+}
+.top h1 { margin: 0; font-size: 1.05rem; flex: 1; }
+.chip {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.icon-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.icon-btn .dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--fail-ink);
+}
+
+/* Tabs */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+  margin: 0 0.75rem;
+  padding: 0.25rem;
+  background: #ebe8e1;
+  border-radius: 14px;
+}
+.tab {
+  border: 0;
+  background: transparent;
+  border-radius: 11px;
+  padding: 0.65rem 0.2rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.tab.active { background: var(--card); color: var(--ink); box-shadow: 0 1px 4px rgba(50, 60, 45, 0.15); }
+
+.banner {
+  margin: 0.5rem 0.75rem 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.banner span { flex: 1; }
+.banner.edit { background: #fff6dc; border: 1px solid #e6cf85; }
+.banner.error { background: var(--fail-bg); border: 1px solid var(--fail-line); color: var(--fail-ink); }
+.banner button {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 10px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.82rem;
+}
+
+/* Panels */
+main { flex: 1; padding: 0.6rem 0.75rem; touch-action: pan-y; }
+.panel { display: flex; flex-direction: column; gap: 0.65rem; }
+.hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.card h2 { margin: 0; font-size: 0.95rem; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.row { display: flex; gap: 0.5rem; align-items: flex-end; }
+.row > * { flex: 1; }
+select {
+  height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fcfbf8;
+  padding: 0 0.7rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* Stepper */
+.stepper { display: flex; gap: 0.4rem; height: 64px; position: relative; }
+.stepper.small { height: 54px; }
+.step-btn {
+  width: 64px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f8f7f3;
+  font-size: 2rem;
+  line-height: 1;
+}
+.stepper.small .step-btn { width: 54px; font-size: 1.7rem; }
+.step-btn:active { background: var(--brand-soft); }
+.val {
+  flex: 1;
+  min-width: 0;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: #fcfbf8;
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.stepper.small .val { font-size: 1.4rem; }
+.val small { font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-left: 0.2rem; }
+.val.in { border-color: var(--pass-line); background: var(--pass-bg); }
+.val.out { border-color: var(--fail-line); background: var(--fail-bg); }
+.val-input {
+  position: absolute;
+  inset: 0 70px;
+  border: 2px solid var(--brand-dark);
+  border-radius: 14px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+.stepper.small .val-input { inset: 0 60px; }
+.status { font-size: 0.82rem; font-weight: 600; min-height: 1.1em; }
+.status.in { color: var(--pass-ink); }
+.status.out { color: var(--fail-ink); }
+
+/* Brett */
+.board-wrap { display: flex; flex-direction: column; gap: 0.25rem; }
+.side { font-size: 0.72rem; color: var(--muted); text-align: center; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.grid { display: grid; gap: 0.3rem; }
+.cell {
+  aspect-ratio: 1 / 1.15;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fcfbf8;
+  padding: 0.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  min-width: 0;
+}
+.cell b { font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.cell i { font-style: normal; font-size: 0.68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cell.empty b { color: #b7b3aa; font-weight: 600; }
+.cell.sel { outline: 3px solid var(--brand-dark); outline-offset: 1px; }
+.stats { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+.stats b { color: var(--ink); }
+.link-btn {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  height: 52px;
+  font-weight: 700;
+}
+
+/* Fuß */
+.actions {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg) 85%, rgba(246, 244, 239, 0));
+  padding: 0.5rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+}
+.actions .last { grid-column: 1 / -1; margin: 0; font-size: 0.8rem; color: var(--muted); text-align: center; min-height: 1.1em; }
+.btn {
+  height: 60px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.btn.primary { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; font-size: 1.2rem; }
+.btn.primary:active { background: #3b5133; }
+.btn.primary.ok { background: var(--pass-ink); }
+.btn.danger { color: var(--fail-ink); }
+
+/* Overlays */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 35, 40, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10;
+}
+.sheet {
+  width: min(100%, 480px);
+  max-height: 92dvh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 20px 20px 0 0;
+  padding: 0.9rem 0.8rem calc(0.9rem + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.sheet.full { height: 92dvh; }
+.sheet-head { display: flex; align-items: center; gap: 0.5rem; }
+.sheet-head h2 { margin: 0; font-size: 1.05rem; flex: 1; }
+.sheet .btn { height: 54px; font-size: 1rem; }
+.btn-row { display: flex; gap: 0.5rem; }
+.btn-row .btn { flex: 1; }
+.text-input {
+  height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 0.8rem;
+  font-size: 1.1rem;
+  background: #fff;
+}
+.info { font-size: 0.82rem; color: var(--muted); margin: 0; line-height: 1.45; }
+
+/* Verlauf */
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.list li { display: flex; gap: 0.35rem; }
+.item {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.item .main { font-weight: 700; font-variant-numeric: tabular-nums; }
+.item .meta { font-size: 0.76rem; color: var(--muted); }
+.item .warn { color: var(--fail-ink); }
+.del {
+  width: 52px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  font-size: 1.15rem;
+}
+.chart { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0.5rem; }
+.chart h3 { margin: 0 0 0.3rem; font-size: 0.8rem; color: var(--muted); font-weight: 700; }
+.chart svg { width: 100%; height: auto; display: block; touch-action: none; }
+.chart p { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--muted); min-height: 1.1em; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 1.5rem), 456px);
+  background: var(--ink);
+  color: #fff;
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 20;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+.toast span { flex: 1; font-size: 0.92rem; }
+.toast button {
+  border: 0;
+  background: transparent;
+  color: #b9d4a8;
+  font-weight: 800;
+  padding: 0.4rem 0.3rem;
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Dokumentationshelfer</h1>
+  <button id="device-btn" class="chip" type="button">Gerät</button>
+  <button id="menu-btn" class="icon-btn" type="button" aria-label="Menü: CSV sichern und mehr">☰<span class="dot" hidden></span></button>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab" type="button" role="tab" data-tab="hoehe">Höhe</button>
+  <button class="tab" type="button" role="tab" data-tab="frisch">Frischdichte</button>
+  <button class="tab" type="button" role="tab" data-tab="brett">Brettdichte</button>
+</nav>
+
+<div id="storage-banner" class="banner error" hidden><span>Speichern im Browser fehlgeschlagen. Bitte sofort CSV sichern (☰).</span></div>
+<div id="edit-banner" class="banner edit" hidden><span id="edit-text">Eintrag bearbeiten</span><button id="edit-cancel" type="button">Abbrechen</button></div>
+
+<main id="panels">
+  <section class="panel" data-panel="hoehe">
+    <p class="hint">Nassseite · je Brett kleinster und größter Wert · Soll 205–213 mm</p>
+    <div class="card">
+      <div class="field">
+        <span class="lbl">Kleinster Wert</span>
+        <div class="stepper" data-src="hoehe" data-path="min" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm" data-tol="1"></div>
+        <span class="status" data-status="hoehe.min"></span>
+      </div>
+      <div class="field">
+        <span class="lbl">Größter Wert</span>
+        <div class="stepper" data-src="hoehe" data-path="max" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm" data-tol="1"></div>
+        <span class="status" data-status="hoehe.max"></span>
+      </div>
+      <p id="hoehe-warn" class="status out" hidden>Kleinster Wert ist größer als größter – wird beim Speichern getauscht.</p>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="frisch" hidden>
+    <div class="row">
+      <label class="field"><span class="lbl">Steintyp</span>
+        <select id="frisch-typ"><option value="I3">I3</option><option value="I2">I2</option></select>
+      </label>
+    </div>
+    <div class="card">
+      <h2>Stein vorne</h2>
+      <div class="field"><span class="lbl">Gewicht</span>
+        <div class="stepper small" data-src="frisch" data-path="vorne.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+      <div class="field"><span class="lbl">Höhe</span>
+        <div class="stepper small" data-src="frisch" data-path="vorne.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+      <span class="status" data-density="frisch.vorne"></span>
+    </div>
+    <div class="card">
+      <h2>Stein hinten</h2>
+      <div class="field"><span class="lbl">Gewicht</span>
+        <div class="stepper small" data-src="frisch" data-path="hinten.g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+      <div class="field"><span class="lbl">Höhe</span>
+        <div class="stepper small" data-src="frisch" data-path="hinten.h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+      <span class="status" data-density="frisch.hinten"></span>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="brett" hidden>
+    <div class="row">
+      <label class="field"><span class="lbl">Steintyp</span>
+        <select id="brett-typ"><option value="I3">I3</option><option value="I2">I2</option></select>
+      </label>
+      <div class="field" style="flex:1.6"><span class="lbl">Brett-Nr.</span>
+        <div class="stepper small" data-src="brett" data-path="nr" data-step="1" data-dec="0" data-lo="1" data-hi="999"></div></div>
+    </div>
+    <div class="board-wrap">
+      <div class="side">vorne</div>
+      <div id="grid" class="grid"></div>
+      <div class="side">hinten</div>
+    </div>
+    <div id="brett-stats" class="stats"></div>
+    <button id="layout-btn" class="link-btn" type="button">Layout</button>
+  </section>
+</main>
+
+<footer class="actions">
+  <button id="history-btn" class="btn" type="button">Verlauf</button>
+  <button id="save-btn" class="btn primary" type="button">Speichern</button>
+  <p id="last-line" class="last"></p>
+</footer>
+
+<!-- Stein-Popup -->
+<div id="stone-ov" class="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="stone-title">
+    <div class="sheet-head"><h2 id="stone-title">Stein</h2><button class="icon-btn" type="button" data-close="stone" aria-label="Schließen">✕</button></div>
+    <div class="field"><span class="lbl">Gewicht</span>
+      <div class="stepper" data-src="popup" data-path="g" data-step="0.1" data-dec="2" data-mindec="1" data-lo="0.1" data-hi="30" data-unit="kg"></div></div>
+    <div class="field"><span class="lbl">Höhe</span>
+      <div class="stepper" data-src="popup" data-path="h" data-step="1" data-dec="0" data-lo="150" data-hi="260" data-unit="mm"></div></div>
+    <span class="status" id="stone-density"></span>
+    <div class="btn-row">
+      <button id="stone-clear" class="btn danger" type="button">Leeren</button>
+      <button id="stone-done" class="btn" type="button">Fertig</button>
+      <button id="stone-next" class="btn primary" type="button">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Verlauf -->
+<div id="history-ov" class="overlay" hidden>
+  <div class="sheet full" role="dialog" aria-modal="true" aria-labelledby="history-title">
+    <div class="sheet-head"><h2 id="history-title">Verlauf</h2><button class="icon-btn" type="button" data-close="history" aria-label="Schließen">✕</button></div>
+    <div id="history-chart"></div>
+    <p class="info">Antippen zum Bearbeiten.</p>
+    <ul id="history-list" class="list"></ul>
+  </div>
+</div>
+
+<!-- Menü -->
+<div id="menu-ov" class="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+    <div class="sheet-head"><h2 id="menu-title">Daten</h2><button class="icon-btn" type="button" data-close="menu" aria-label="Schließen">✕</button></div>
+    <p id="menu-info" class="info"></p>
+    <button id="csv-download" class="btn primary" type="button">CSV herunterladen</button>
+    <button id="csv-share" class="btn" type="button" hidden>CSV teilen …</button>
+    <button id="csv-import" class="btn" type="button">CSV importieren / zusammenführen</button>
+    <input id="csv-file" type="file" accept=".csv,text/csv,text/plain" multiple hidden>
+    <button id="device-change" class="btn" type="button">Gerätename ändern</button>
+    <button id="wipe" class="btn danger" type="button">Alle Daten auf diesem Gerät löschen</button>
+    <p class="info">Die Daten liegen nur in diesem Browser. Bitte regelmäßig die CSV sichern und am Ende des Tages schicken. CSVs mehrerer Geräte lassen sich hier importieren; doppelte Einträge werden übersprungen.</p>
+    <p id="version" class="info"></p>
+  </div>
+</div>
+
+<!-- Gerätename -->
+<div id="device-ov" class="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="device-title">
+    <div class="sheet-head"><h2 id="device-title">Wer misst mit diesem Gerät?</h2></div>
+    <p class="info">Der Name landet in jeder Zeile der CSV, damit sich die Daten mehrerer Geräte auseinanderhalten lassen.</p>
+    <input id="device-input" class="text-input" type="text" maxlength="30" placeholder="z. B. Vorname oder Handy 2" autocomplete="off">
+    <button id="device-save" class="btn primary" type="button">Übernehmen</button>
+  </div>
+</div>
+
+<!-- Brett-Layout -->
+<div id="layout-ov" class="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="layout-title">
+    <div class="sheet-head"><h2 id="layout-title">Brett-Layout</h2><button class="icon-btn" type="button" data-close="layout" aria-label="Schließen">✕</button></div>
+    <div class="field"><span class="lbl">Reihen (vorne → hinten)</span>
+      <div class="stepper small" data-src="layout" data-path="rows" data-step="1" data-dec="0" data-lo="1" data-hi="6"></div></div>
+    <div class="field"><span class="lbl">Steine je Reihe</span>
+      <div class="stepper small" data-src="layout" data-path="cols" data-step="1" data-dec="0" data-lo="1" data-hi="10"></div></div>
+    <button id="layout-save" class="btn primary" type="button">Übernehmen</button>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden role="status"><span id="toast-text"></span><button id="toast-action" type="button" hidden></button></div>
+
+<noscript>Diese App braucht JavaScript.</noscript>
+
+<script>
+'use strict';
+const VERSION = '1.0.0';
+const KEY = 'dokumentationshelfer.v1';
+
+// Standardwerte und Dichte wie im Dichterechner (SebastianHelper/block-density-qc):
+// Steindichte = Steingewicht [kg] / (Steinhöhe [mm] * Faktor)
+const TYPES = {
+  I3: { weight: 13.0, factor: 0.046, minDensity: 1.358, layout: { rows: 2, cols: 6 } },
+  I2: { weight: 9.0, factor: 0.031, minDensity: 1.387, layout: { rows: 3, cols: 6 } },
+};
+const HEIGHT_DEFAULT = 209;
+const TOL = { min: 205, max: 213 }; // 209 ±4 (Vorgabe) = 208 −3/+5 (Norm)
+const KIND_LABEL = { hoehe: 'Höhe', frisch: 'Frischdichte', brett: 'Brettdichte' };
+const CSV_KIND = { hoehe: 'hoehe', frisch: 'frischdichte', brett: 'brettdichte' };
+const CSV_COLS = ['zeitstempel', 'geraet', 'messung', 'eintrag_id', 'steintyp', 'brett_nr', 'layout', 'position',
+  'min_mm', 'max_mm', 'gewicht_kg', 'hoehe_mm', 'dichte', 'geaendert'];
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => [...document.querySelectorAll(sel)];
+const copy = (o) => JSON.parse(JSON.stringify(o));
+
+// ---------- Zustand ----------
+
+function newBoard(typ, nr, layouts) {
+  const l = (layouts && layouts[typ]) || TYPES[typ].layout;
+  return { typ, nr, rows: l.rows, cols: l.cols, stones: Array(l.rows * l.cols).fill(null) };
+}
+
+function defaultStore() {
+  const layouts = { I3: { ...TYPES.I3.layout }, I2: { ...TYPES.I2.layout } };
+  return {
+    v: 1,
+    device: '',
+    tab: 'hoehe',
+    entries: [],
+    deleted: [],
+    layouts,
+    lastExport: null,
+    draft: {
+      hoehe: { min: HEIGHT_DEFAULT, max: HEIGHT_DEFAULT },
+      frisch: { typ: 'I3', vorne: { g: TYPES.I3.weight, h: HEIGHT_DEFAULT }, hinten: { g: TYPES.I3.weight, h: HEIGHT_DEFAULT } },
+      brett: newBoard('I3', 1, layouts),
+    },
+  };
+}
+
+function load() {
+  const d = defaultStore();
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { s = null; }
+  if (!s || typeof s !== 'object') return d;
+  return {
+    ...d,
+    ...s,
+    entries: Array.isArray(s.entries) ? s.entries : [],
+    deleted: Array.isArray(s.deleted) ? s.deleted : [],
+    layouts: { ...d.layouts, ...(s.layouts || {}) },
+    draft: { ...d.draft, ...(s.draft || {}) },
+  };
+}
+
+let store = load();
+let editing = null; // { id, kind, data }
+let popup = null;   // { i, stone }
+let layoutForm = null;
+let storageOk = true;
+
+const stamp = (e) => Date.parse(e.edited || e.ts) || 0;
+const sortEntries = (list) => list.sort((a, b) => (Date.parse(a.ts) || 0) - (Date.parse(b.ts) || 0));
+
+// Mehrere offene Tabs: Einträge und Löschungen aus dem Speicher übernehmen, statt sie zu überschreiben.
+function mergeFrom(other) {
+  if (!other || !Array.isArray(other.entries)) return;
+  const del = new Set([...store.deleted, ...(other.deleted || [])]);
+  const map = new Map();
+  for (const e of [...other.entries, ...store.entries]) {
+    if (!e || !e.id || del.has(e.id)) continue;
+    const prev = map.get(e.id);
+    if (!prev || stamp(e) >= stamp(prev)) map.set(e.id, e);
+  }
+  store.deleted = [...del];
+  store.entries = sortEntries([...map.values()]);
+  if (other.lastExport && (!store.lastExport || other.lastExport > store.lastExport)) store.lastExport = other.lastExport;
+}
+
+function persist() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) mergeFrom(JSON.parse(raw));
+    localStorage.setItem(KEY, JSON.stringify(store));
+    storageOk = true;
+  } catch (e) {
+    storageOk = false;
+  }
+}
+
+function syncFromStorage() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) mergeFrom(JSON.parse(raw));
+  } catch (e) { /* ignorieren */ }
+  render();
+}
+
+function form(kind) {
+  return editing && editing.kind === kind ? editing.data : store.draft[kind];
+}
+
+// ---------- Helfer ----------
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function isoLocal(d = new Date()) {
+  const off = -d.getTimezoneOffset();
+  const sign = off >= 0 ? '+' : '-';
+  const a = Math.abs(off);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
+}
+
+function newId() {
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+}
+
+function fmt(v, maxDec = 0, minDec = maxDec) {
+  if (v == null || !Number.isFinite(v)) return '–';
+  let s = v.toFixed(maxDec);
+  if (maxDec > minDec) {
+    while (s.includes('.') && s.split('.')[1].length > minDec && s.endsWith('0')) s = s.slice(0, -1);
+    if (s.endsWith('.')) s = s.slice(0, -1);
+  }
+  return s.replace('.', ',');
+}
+const kg = (v) => fmt(v, 2, 1);
+
+function timeLabel(ts) {
+  const d = new Date(ts);
+  if (isNaN(d)) return ts || '';
+  const t = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return d.toDateString() === new Date().toDateString() ? t : `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. ${t}`;
+}
+
+function density(g, h, typ) {
+  const t = TYPES[typ];
+  if (!t || !g || !h) return null;
+  return g / (h * t.factor);
+}
+
+function densityStatus(g, h, typ) {
+  const d = density(g, h, typ);
+  if (d == null) return { text: '', cls: '' };
+  const min = TYPES[typ].minDensity;
+  const ok = d > min;
+  return { text: `${ok ? '✓' : '✗'} Dichte ${fmt(d, 3)} · Mindestdichte ${fmt(min, 3)}`, cls: ok ? 'in' : 'out' };
+}
+
+const inTol = (v) => v >= TOL.min && v <= TOL.max;
+
+function getPath(obj, path) { return path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj); }
+function setPath(obj, path, v) {
+  const ks = path.split('.');
+  const last = ks.pop();
+  ks.reduce((o, k) => o[k], obj)[last] = v;
+}
+
+function srcObj(src) {
+  if (src === 'popup') return popup && popup.stone;
+  if (src === 'layout') return layoutForm;
+  return form(src);
+}
+
+function stoneLabel(b, i) {
+  const r = Math.floor(i / b.cols) + 1;
+  const c = (i % b.cols) + 1;
+  const name = r === 1 ? ' (vorne)' : r === b.rows ? ' (hinten)' : '';
+  return `Reihe ${r}${name} · Stein ${c}`;
+}
+
+// ---------- Stepper ----------
+
+function initStepper(el) {
+  const unit = el.dataset.unit ? `<small>${el.dataset.unit}</small>` : '';
+  el.innerHTML =
+    `<button type="button" class="step-btn" data-dir="-1" aria-label="weniger">−</button>` +
+    `<button type="button" class="val" aria-label="Wert eintippen"><span></span>${unit}</button>` +
+    `<button type="button" class="step-btn" data-dir="1" aria-label="mehr">+</button>` +
+    `<input class="val-input" type="text" inputmode="decimal" enterkeyhint="done" hidden>`;
+  el.querySelectorAll('.step-btn').forEach((btn) => bindRepeat(btn, () => step(el, Number(btn.dataset.dir))));
+
+  const input = el.querySelector('.val-input');
+  el.querySelector('.val').addEventListener('click', () => {
+    const obj = srcObj(el.dataset.src);
+    if (!obj) return;
+    input.value = fmt(getPath(obj, el.dataset.path), Number(el.dataset.dec), Number(el.dataset.mindec || el.dataset.dec));
+    input.hidden = false;
+    input.focus();
+    input.select();
+  });
+  const commit = () => {
+    if (input.hidden) return;
+    input.hidden = true;
+    const v = Number(input.value.replace(',', '.').trim());
+    if (input.value.trim() !== '' && Number.isFinite(v)) setValue(el, v);
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { input.hidden = true; }
+  });
+}
+
+// Antippen = ein Schritt, Halten = wiederholen (schneller nach einer Weile).
+function bindRepeat(btn, fn) {
+  let t1 = null, t2 = null, held = false, count = 0;
+  const stop = () => { clearTimeout(t1); clearTimeout(t2); t1 = t2 = null; };
+  const tick = () => { fn(); count++; t2 = setTimeout(tick, count > 12 ? 40 : 90); };
+  btn.addEventListener('pointerdown', () => {
+    held = false; count = 0; stop();
+    t1 = setTimeout(() => { held = true; tick(); }, 420);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => btn.addEventListener(ev, stop));
+  btn.addEventListener('click', () => { if (held) { held = false; return; } fn(); });
+  btn.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function step(el, dir) {
+  const obj = srcObj(el.dataset.src);
+  if (!obj) return;
+  const cur = Number(getPath(obj, el.dataset.path)) || 0;
+  setValue(el, cur + dir * Number(el.dataset.step));
+}
+
+function setValue(el, v) {
+  const obj = srcObj(el.dataset.src);
+  if (!obj) return;
+  const lo = Number(el.dataset.lo), hi = Number(el.dataset.hi);
+  const f = 10 ** Number(el.dataset.dec);
+  v = Math.round(v * f) / f;
+  v = Math.min(hi, Math.max(lo, v));
+  setPath(obj, el.dataset.path, v);
+  if (el.dataset.src !== 'popup' && el.dataset.src !== 'layout' && !editing) persist();
+  render();
+}
+
+function renderSteppers() {
+  for (const el of $$('.stepper')) {
+    const obj = srcObj(el.dataset.src);
+    if (!obj) continue;
+    const v = getPath(obj, el.dataset.path);
+    const dec = Number(el.dataset.dec);
+    el.querySelector('.val span').textContent = fmt(v, dec, Number(el.dataset.mindec || dec));
+    const val = el.querySelector('.val');
+    val.classList.toggle('in', !!el.dataset.tol && inTol(v));
+    val.classList.toggle('out', !!el.dataset.tol && !inTol(v));
+  }
+}
+
+// ---------- Rendern ----------
+
+function render() {
+  const tab = store.tab;
+  $$('.tab').forEach((b) => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+    b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
+  });
+  $$('.panel').forEach((p) => { p.hidden = p.dataset.panel !== tab; });
+
+  $('#device-btn').textContent = store.device || 'Gerät?';
+  $('#storage-banner').hidden = storageOk;
+
+  const editEntry = editing && store.entries.find((e) => e.id === editing.id);
+  if (editing && !editEntry) editing = null; // in anderem Tab gelöscht
+  $('#edit-banner').hidden = !editing;
+  if (editing) $('#edit-text').textContent = `Bearbeiten: ${KIND_LABEL[editing.kind]} von ${timeLabel(editEntry.ts)}`;
+  $('#save-btn').textContent = editing ? 'Änderung speichern' : (tab === 'brett' ? 'Brett speichern' : 'Speichern');
+
+  renderSteppers();
+  renderHoehe();
+  renderFrisch();
+  renderBrett();
+  renderFooter();
+  if (!$('#stone-ov').hidden) renderPopup();
+  if (!$('#history-ov').hidden) renderHistory();
+  if (!$('#menu-ov').hidden) renderMenu();
+}
+
+function renderHoehe() {
+  const h = form('hoehe');
+  for (const k of ['min', 'max']) {
+    const el = document.querySelector(`[data-status="hoehe.${k}"]`);
+    const ok = inTol(h[k]);
+    el.textContent = ok ? '✓ in Toleranz' : `⚠ außerhalb ${TOL.min}–${TOL.max} mm`;
+    el.className = `status ${ok ? 'in' : 'out'}`;
+  }
+  $('#hoehe-warn').hidden = !(h.min > h.max);
+}
+
+function renderFrisch() {
+  const f = form('frisch');
+  $('#frisch-typ').value = f.typ;
+  for (const p of ['vorne', 'hinten']) {
+    const s = densityStatus(f[p].g, f[p].h, f.typ);
+    const el = document.querySelector(`[data-density="frisch.${p}"]`);
+    el.textContent = s.text;
+    el.className = `status ${s.cls}`;
+  }
+}
+
+function boardStats(b) {
+  const vals = b.stones.map((s, i) => (s ? { ...s, i, d: density(s.g, s.h, b.typ) } : null)).filter(Boolean);
+  if (!vals.length) return null;
+  const mean = vals.reduce((a, s) => a + s.g, 0) / vals.length;
+  const rows = [];
+  for (let r = 0; r < b.rows; r++) {
+    const rv = vals.filter((s) => Math.floor(s.i / b.cols) === r);
+    rows.push(rv.length ? rv.reduce((a, s) => a + s.g, 0) / rv.length : null);
+  }
+  return {
+    n: vals.length,
+    mean,
+    min: Math.min(...vals.map((s) => s.g)),
+    max: Math.max(...vals.map((s) => s.g)),
+    meanD: vals.reduce((a, s) => a + s.d, 0) / vals.length,
+    rows,
+  };
+}
+
+function renderBrett() {
+  const b = form('brett');
+  $('#brett-typ').value = b.typ;
+  const grid = $('#grid');
+  grid.style.gridTemplateColumns = `repeat(${b.cols}, 1fr)`;
+  const st = boardStats(b);
+  grid.innerHTML = b.stones.map((s, i) => {
+    const sel = popup && popup.i === i ? ' sel' : '';
+    if (!s) return `<button type="button" class="cell empty${sel}" data-i="${i}" aria-label="${stoneLabel(b, i)}, leer"><b>·</b><i>${(i % b.cols) + 1}</i></button>`;
+    let style = '';
+    let dev = '';
+    if (st && st.n >= 3) {
+      const diff = s.g - st.mean;
+      const a = Math.min(Math.abs(diff) / 0.4, 1) * 0.35;
+      if (Math.abs(diff) >= 0.005) style = ` style="background:${diff > 0 ? `rgba(61,111,180,${a})` : `rgba(200,116,42,${a})`}"`;
+      dev = (diff >= 0 ? '+' : '−') + fmt(Math.abs(diff), 2);
+    } else {
+      dev = fmt(s.h, 0);
+    }
+    return `<button type="button" class="cell${sel}" data-i="${i}"${style} aria-label="${stoneLabel(b, i)}: ${kg(s.g)} kg"><b>${kg(s.g)}</b><i>${dev}</i></button>`;
+  }).join('');
+
+  let html = `<b>${st ? st.n : 0}</b> von ${b.stones.length} Steinen erfasst`;
+  if (st) {
+    html += ` · Ø <b>${fmt(st.mean, 2)} kg</b> · Spanne ${fmt(st.max - st.min, 2)} kg · Ø Dichte ${fmt(st.meanD, 3)}`;
+    html += '<br>' + st.rows.map((m, r) => `Reihe ${r + 1}${r === 0 ? ' (vorne)' : r === b.rows - 1 ? ' (hinten)' : ''}: ${m == null ? '–' : fmt(m, 2) + ' kg'}`).join(' · ');
+    if (st.n >= 3) html += '<br>Kleine Zahl: Abweichung vom Ø (blau schwerer, orange leichter)';
+  } else {
+    html += ' · Stein antippen, um Werte einzutragen';
+  }
+  $('#brett-stats').innerHTML = html;
+  $('#layout-btn').textContent = `Layout ${b.typ}: ${b.rows} Reihen × ${b.cols} Steine ändern`;
+  $('#layout-btn').disabled = !!editing;
+}
+
+function renderFooter() {
+  const tab = store.tab;
+  const list = store.entries.filter((e) => e.kind === tab);
+  $('#history-btn').textContent = `Verlauf (${list.length})`;
+  const today = new Date().toDateString();
+  const nToday = list.filter((e) => new Date(e.ts).toDateString() === today).length;
+  const last = list[list.length - 1];
+  $('#last-line').textContent = last ? `Heute ${nToday} · zuletzt ${timeLabel(last.ts)}: ${summary(last)}` : 'Noch nichts gespeichert';
+
+  const unsaved = store.entries.filter((e) => !store.lastExport || Date.parse(e.edited || e.ts) > Date.parse(store.lastExport));
+  const oldest = unsaved.length ? Math.min(...unsaved.map((e) => Date.parse(e.ts))) : null;
+  $('#menu-btn .dot').hidden = !(oldest && Date.now() - oldest > 60 * 60 * 1000);
+}
+
+function summary(e) {
+  const d = e.data;
+  if (e.kind === 'hoehe') return `${d.min}–${d.max} mm`;
+  if (e.kind === 'frisch') return `${d.typ} · vorne ${kg(d.vorne.g)} kg/${d.vorne.h} · hinten ${kg(d.hinten.g)} kg/${d.hinten.h}`;
+  if (e.kind === 'brett') {
+    const st = boardStats(d);
+    return `Brett ${d.nr} · ${d.typ} · ${st ? st.n : 0}/${d.stones.length} Steine${st ? ` · Ø ${fmt(st.mean, 2)} kg` : ''}`;
+  }
+  return '';
+}
+
+// ---------- Tabs, Wischen ----------
+
+function setTab(tab) {
+  if (tab === store.tab) return;
+  if (editing) { editing = null; toast('Bearbeiten abgebrochen'); }
+  store.tab = tab;
+  persist();
+  render();
+}
+
+$$('.tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+
+(function swipeTabs() {
+  const order = ['hoehe', 'frisch', 'brett'];
+  let x0 = null, y0 = null;
+  const area = $('#panels');
+  area.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1 || e.target.closest('.stepper, .grid, select, input')) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, { passive: true });
+  area.addEventListener('touchend', (e) => {
+    if (x0 == null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < 2 * Math.abs(dy)) return;
+    const i = order.indexOf(store.tab) + (dx < 0 ? 1 : -1);
+    if (i >= 0 && i < order.length) setTab(order[i]);
+  }, { passive: true });
+})();
+
+// ---------- Frischdichte / Brett ----------
+
+$('#frisch-typ').addEventListener('change', (e) => {
+  const f = form('frisch');
+  f.typ = e.target.value;
+  f.vorne.g = f.hinten.g = TYPES[f.typ].weight;
+  if (!editing) persist();
+  render();
+});
+
+$('#brett-typ').addEventListener('change', (e) => {
+  const b = form('brett');
+  const typ = e.target.value;
+  if (b.stones.some(Boolean) && !confirm('Steintyp ändern? Die Werte dieses Bretts werden geleert.')) {
+    e.target.value = b.typ;
+    return;
+  }
+  Object.assign(b, newBoard(typ, b.nr, store.layouts));
+  if (!editing) persist();
+  render();
+});
+
+$('#grid').addEventListener('click', (e) => {
+  const cell = e.target.closest('.cell');
+  if (cell) openStone(Number(cell.dataset.i));
+});
+
+function openStone(i) {
+  const b = form('brett');
+  const existing = b.stones[i];
+  let ref = null;
+  for (let j = i - 1; j >= 0 && !ref; j--) ref = b.stones[j];
+  if (!ref) ref = b.stones.find(Boolean);
+  popup = { i, stone: existing ? { ...existing } : { g: ref ? ref.g : TYPES[b.typ].weight, h: ref ? ref.h : HEIGHT_DEFAULT } };
+  $('#stone-ov').hidden = false;
+  render();
+}
+
+function renderPopup() {
+  const b = form('brett');
+  if (!popup) return;
+  $('#stone-title').textContent = `Brett ${b.nr} · ${stoneLabel(b, popup.i)}`;
+  const s = densityStatus(popup.stone.g, popup.stone.h, b.typ);
+  $('#stone-density').textContent = s.text;
+  $('#stone-density').className = `status ${s.cls}`;
+  $('#stone-clear').disabled = !b.stones[popup.i];
+}
+
+function closeStone() {
+  popup = null;
+  $('#stone-ov').hidden = true;
+  render();
+}
+
+function commitStone() {
+  const b = form('brett');
+  b.stones[popup.i] = { g: popup.stone.g, h: popup.stone.h };
+  if (!editing) persist();
+}
+
+$('#stone-done').addEventListener('click', () => { commitStone(); closeStone(); });
+$('#stone-next').addEventListener('click', () => {
+  commitStone();
+  const b = form('brett');
+  const n = b.stones.length;
+  let next = -1;
+  for (let k = 1; k < n && next < 0; k++) {
+    const j = (popup.i + k) % n;
+    if (!b.stones[j]) next = j;
+  }
+  if (next < 0) { closeStone(); toast('Alle Steine erfasst'); return; }
+  openStone(next);
+});
+$('#stone-clear').addEventListener('click', () => {
+  const b = form('brett');
+  b.stones[popup.i] = null;
+  if (!editing) persist();
+  closeStone();
+});
+
+$('#layout-btn').addEventListener('click', () => {
+  const b = form('brett');
+  layoutForm = { rows: b.rows, cols: b.cols };
+  $('#layout-title').textContent = `Brett-Layout ${b.typ}`;
+  $('#layout-ov').hidden = false;
+  render();
+});
+$('#layout-save').addEventListener('click', () => {
+  const b = store.draft.brett;
+  if ((layoutForm.rows !== b.rows || layoutForm.cols !== b.cols) && b.stones.some(Boolean)
+    && !confirm('Layout ändern? Die Werte des aktuellen Bretts werden geleert.')) return;
+  store.layouts[b.typ] = { ...layoutForm };
+  if (layoutForm.rows !== b.rows || layoutForm.cols !== b.cols) store.draft.brett = newBoard(b.typ, b.nr, store.layouts);
+  layoutForm = null;
+  $('#layout-ov').hidden = true;
+  persist();
+  render();
+});
+
+// ---------- Speichern, Bearbeiten, Löschen ----------
+
+function cleanData(kind, data) {
+  const d = copy(data);
+  if (kind === 'hoehe' && d.min > d.max) [d.min, d.max] = [d.max, d.min];
+  return d;
+}
+
+function flashSave() {
+  const btn = $('#save-btn');
+  btn.classList.add('ok');
+  setTimeout(() => btn.classList.remove('ok'), 600);
+  if (navigator.vibrate) navigator.vibrate(15);
+}
+
+$('#save-btn').addEventListener('click', () => {
+  const kind = store.tab;
+  if (kind === 'brett') {
+    const b = form('brett');
+    const n = b.stones.filter(Boolean).length;
+    if (!n) { toast('Noch kein Stein erfasst'); return; }
+    if (n < b.stones.length && !confirm(`Nur ${n} von ${b.stones.length} Steinen erfasst. Trotzdem speichern?`)) return;
+  }
+
+  if (editing) {
+    const e = store.entries.find((x) => x.id === editing.id);
+    e.data = cleanData(kind, editing.data);
+    e.edited = isoLocal();
+    editing = null;
+    persist();
+    render();
+    flashSave();
+    toast('Änderung gespeichert');
+    return;
+  }
+
+  const before = copy(store.draft[kind]);
+  const entry = { id: newId(), ts: isoLocal(), device: store.device, kind, data: cleanData(kind, store.draft[kind]) };
+  store.entries.push(entry);
+  if (kind === 'brett') store.draft.brett = newBoard(entry.data.typ, entry.data.nr + 1, store.layouts);
+  persist();
+  render();
+  flashSave();
+  toast(`Gespeichert ${timeLabel(entry.ts)} · ${summary(entry)}`, 'Rückgängig', () => {
+    removeEntry(entry.id);
+    store.draft[kind] = before;
+    persist();
+    render();
+    toast('Eintrag entfernt');
+  });
+});
+
+$('#edit-cancel').addEventListener('click', () => { editing = null; render(); });
+
+function removeEntry(id) {
+  store.entries = store.entries.filter((e) => e.id !== id);
+  if (!store.deleted.includes(id)) store.deleted.push(id);
+}
+
+function startEdit(id) {
+  const e = store.entries.find((x) => x.id === id);
+  if (!e) return;
+  editing = { id, kind: e.kind, data: copy(e.data) };
+  store.tab = e.kind;
+  $('#history-ov').hidden = true;
+  persist();
+  render();
+}
+
+// ---------- Verlauf ----------
+
+$('#history-btn').addEventListener('click', () => { $('#history-ov').hidden = false; render(); });
+
+function renderHistory() {
+  const kind = store.tab;
+  const list = store.entries.filter((e) => e.kind === kind);
+  $('#history-title').textContent = `Verlauf · ${KIND_LABEL[kind]} (${list.length})`;
+  $('#history-chart').innerHTML = kind === 'hoehe' ? hoeheChart(list) : '';
+  if (kind === 'hoehe') bindChart(list.slice(-60));
+  const items = [...list].reverse().map((e) => {
+    let warn = '';
+    if (e.kind === 'hoehe' && !(inTol(e.data.min) && inTol(e.data.max))) warn = ' <span class="warn">⚠ Toleranz</span>';
+    const meta = [timeLabel(e.ts), e.device, e.edited ? `geändert ${timeLabel(e.edited)}` : ''].filter(Boolean).join(' · ');
+    return `<li><button type="button" class="item" data-edit="${e.id}"><span class="main">${summary(e)}${warn}</span><span class="meta">${escapeHtml(meta)}</span></button>` +
+      `<button type="button" class="del" data-del="${e.id}" aria-label="Löschen">🗑</button></li>`;
+  });
+  $('#history-list').innerHTML = items.join('') || '<li class="info">Noch keine Einträge.</li>';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+$('#history-list').addEventListener('click', (ev) => {
+  const ed = ev.target.closest('[data-edit]');
+  if (ed) { startEdit(ed.dataset.edit); return; }
+  const del = ev.target.closest('[data-del]');
+  if (!del) return;
+  const e = store.entries.find((x) => x.id === del.dataset.del);
+  if (!e || !confirm(`Eintrag von ${timeLabel(e.ts)} löschen?\n${summary(e)}`)) return;
+  if (editing && editing.id === e.id) editing = null;
+  removeEntry(e.id);
+  persist();
+  render();
+  toast('Eintrag gelöscht', 'Rückgängig', () => {
+    // Gelöschte IDs bleiben gesperrt (auch für andere Tabs), daher mit neuer ID wiederherstellen.
+    store.entries.push({ ...e, id: newId() });
+    sortEntries(store.entries);
+    persist();
+    render();
+  });
+});
+
+function hoeheChart(list) {
+  const pts = list.slice(-60);
+  if (pts.length < 2) return '';
+  const W = 340, H = 140, L = 30, R = 8, T = 8, B = 18;
+  const lo = Math.min(TOL.min - 2, ...pts.map((e) => e.data.min));
+  const hi = Math.max(TOL.max + 2, ...pts.map((e) => e.data.max));
+  const y = (v) => T + ((hi - v) / (hi - lo)) * (H - T - B);
+  const x = (i) => L + 4 + (i * (W - L - R - 8)) / (pts.length - 1);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Höhe je Brett, kleinster bis größter Wert">`;
+  s += `<rect x="${L}" y="${y(TOL.max)}" width="${W - L - R}" height="${y(TOL.min) - y(TOL.max)}" fill="#e9efe4"/>`;
+  s += `<line x1="${L}" x2="${W - R}" y1="${y(HEIGHT_DEFAULT)}" y2="${y(HEIGHT_DEFAULT)}" stroke="#b9c2b1" stroke-dasharray="3 3"/>`;
+  for (const v of [TOL.min, HEIGHT_DEFAULT, TOL.max]) {
+    s += `<text x="${L - 4}" y="${y(v) + 3.5}" text-anchor="end" font-size="10" fill="#6f756f">${v}</text>`;
+  }
+  pts.forEach((e, i) => {
+    const out = !(inTol(e.data.min) && inTol(e.data.max));
+    s += `<line x1="${x(i)}" x2="${x(i)}" y1="${y(e.data.max)}" y2="${y(e.data.min)}" stroke="${out ? '#a2362c' : '#3f4a3a'}" stroke-width="4" stroke-linecap="round"/>`;
+  });
+  s += `<text x="${L}" y="${H - 4}" font-size="10" fill="#6f756f">${timeLabel(pts[0].ts)}</text>`;
+  s += `<text x="${W - R}" y="${H - 4}" text-anchor="end" font-size="10" fill="#6f756f">${timeLabel(pts[pts.length - 1].ts)}</text>`;
+  s += `<line id="chart-cursor" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="#4d6643" stroke-width="1" visibility="hidden"/>`;
+  s += `<rect id="chart-hit" x="${L}" y="0" width="${W - L}" height="${H}" fill="transparent"/>`;
+  s += '</svg>';
+  const out = list.filter((e) => !(inTol(e.data.min) && inTol(e.data.max))).length;
+  return `<div class="chart"><h3>Höhe je Brett (min–max, letzte ${pts.length}) · Band ${TOL.min}–${TOL.max} mm</h3>${s}` +
+    `<p id="chart-tip">${out} von ${list.length} Brettern außerhalb der Toleranz · antippen für Werte</p></div>`;
+}
+
+function bindChart(pts) {
+  const hit = document.getElementById('chart-hit');
+  if (!hit) return;
+  const svg = hit.ownerSVGElement;
+  const show = (ev) => {
+    const r = svg.getBoundingClientRect();
+    if (!r.width) return;
+    const W = 340, L = 30, R = 8;
+    const px = ((ev.clientX - r.left) / r.width) * W;
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round(((px - L - 4) * (pts.length - 1)) / (W - L - R - 8))));
+    const e = pts[i];
+    const cx = L + 4 + (i * (W - L - R - 8)) / (pts.length - 1);
+    const cur = document.getElementById('chart-cursor');
+    cur.setAttribute('x1', cx);
+    cur.setAttribute('x2', cx);
+    cur.setAttribute('visibility', 'visible');
+    document.getElementById('chart-tip').textContent = `${timeLabel(e.ts)} · ${e.data.min}–${e.data.max} mm${e.device ? ' · ' + e.device : ''}`;
+  };
+  hit.addEventListener('pointerdown', show);
+  hit.addEventListener('pointermove', show);
+}
+
+// ---------- CSV ----------
+
+function num(v, dec) { return v == null || !Number.isFinite(v) ? '' : v.toFixed(dec).replace('.', ','); }
+
+function entryRows(e) {
+  const d = e.data;
+  const base = { zeitstempel: e.ts, geraet: e.device || '', messung: CSV_KIND[e.kind], eintrag_id: e.id, geaendert: e.edited || '' };
+  if (e.kind === 'hoehe') return [{ ...base, min_mm: d.min, max_mm: d.max }];
+  if (e.kind === 'frisch') {
+    return ['vorne', 'hinten'].map((p) => ({
+      ...base, steintyp: d.typ, position: p, gewicht_kg: num(d[p].g, 2), hoehe_mm: d[p].h, dichte: num(density(d[p].g, d[p].h, d.typ), 3),
+    }));
+  }
+  if (e.kind === 'brett') {
+    return d.stones.map((s, i) => s && {
+      ...base, steintyp: d.typ, brett_nr: d.nr, layout: `${d.rows}x${d.cols}`,
+      position: `R${Math.floor(i / d.cols) + 1}-S${(i % d.cols) + 1}`,
+      gewicht_kg: num(s.g, 2), hoehe_mm: s.h, dichte: num(density(s.g, s.h, d.typ), 3),
+    }).filter(Boolean);
+  }
+  return [];
+}
+
+function csvField(v) {
+  const s = v == null ? '' : String(v);
+  return /[;"\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function buildCsv() {
+  const lines = [CSV_COLS.join(';')];
+  for (const e of sortEntries([...store.entries])) {
+    for (const r of entryRows(e)) lines.push(CSV_COLS.map((c) => csvField(r[c])).join(';'));
+  }
+  return '﻿' + lines.join('\r\n') + '\r\n';
+}
+
+function csvName() {
+  const d = new Date();
+  const dev = (store.device || 'geraet').normalize('NFKD').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'geraet';
+  return `dokumentationshelfer_${dev}_${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}.csv`;
+}
+
+function markExported() {
+  store.lastExport = isoLocal();
+  persist();
+  render();
+}
+
+$('#csv-download').addEventListener('click', () => {
+  const blob = new Blob([buildCsv()], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = csvName();
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+  markExported();
+  toast(`CSV gespeichert: ${a.download}`);
+});
+
+$('#csv-share').addEventListener('click', async () => {
+  const file = new File([buildCsv()], csvName(), { type: 'text/csv' });
+  try {
+    await navigator.share({ files: [file], title: file.name });
+    markExported();
+  } catch (e) {
+    if (e && e.name !== 'AbortError') toast('Teilen nicht möglich – bitte herunterladen');
+  }
+});
+
+function parseCsv(text) {
+  text = text.replace(/^﻿/, '');
+  const rows = [];
+  let row = [], field = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; } else q = false;
+      } else field += ch;
+    } else if (ch === '"') q = true;
+    else if (ch === ';') { row.push(field); field = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); rows.push(row); row = []; field = '';
+    } else field += ch;
+  }
+  if (field !== '' || row.length) { row.push(field); rows.push(row); }
+  return rows.filter((r) => r.some((x) => x.trim() !== ''));
+}
+
+const pnum = (s) => (s == null || String(s).trim() === '' ? null : Number(String(s).trim().replace(',', '.')));
+const okNum = (v) => v != null && Number.isFinite(v);
+
+function buildEntry(rs) {
+  const f = rs[0];
+  const kind = { hoehe: 'hoehe', frischdichte: 'frisch', brettdichte: 'brett' }[f.messung];
+  if (!kind || !f.eintrag_id || isNaN(Date.parse(f.zeitstempel))) return null;
+  const e = { id: f.eintrag_id, ts: f.zeitstempel, device: f.geraet || '', kind };
+  if (f.geaendert) e.edited = f.geaendert;
+  if (kind === 'hoehe') {
+    e.data = { min: pnum(f.min_mm), max: pnum(f.max_mm) };
+    if (!okNum(e.data.min) || !okNum(e.data.max)) return null;
+  } else if (kind === 'frisch') {
+    const typ = TYPES[f.steintyp] ? f.steintyp : 'I3';
+    e.data = { typ };
+    for (const p of ['vorne', 'hinten']) {
+      const r = rs.find((x) => x.position === p);
+      e.data[p] = { g: r ? pnum(r.gewicht_kg) : null, h: r ? pnum(r.hoehe_mm) : null };
+    }
+  } else {
+    const typ = TYPES[f.steintyp] ? f.steintyp : 'I3';
+    const m = /^(\d+)x(\d+)$/.exec(f.layout || '');
+    const rows = m ? Number(m[1]) : TYPES[typ].layout.rows;
+    const cols = m ? Number(m[2]) : TYPES[typ].layout.cols;
+    e.data = { typ, nr: pnum(f.brett_nr) || 0, rows, cols, stones: Array(rows * cols).fill(null) };
+    for (const r of rs) {
+      const p = /^R(\d+)-S(\d+)$/.exec(r.position || '');
+      if (!p) continue;
+      const i = (Number(p[1]) - 1) * cols + (Number(p[2]) - 1);
+      if (i >= 0 && i < rows * cols) e.data.stones[i] = { g: pnum(r.gewicht_kg), h: pnum(r.hoehe_mm) };
+    }
+  }
+  return e;
+}
+
+function importCsv(text) {
+  const rows = parseCsv(text);
+  const head = (rows.shift() || []).map((h) => h.trim());
+  if (!head.includes('eintrag_id') || !head.includes('messung')) return { error: true };
+  const groups = new Map();
+  for (const r of rows) {
+    const o = {};
+    head.forEach((h, i) => { o[h] = (r[i] || '').trim(); });
+    if (!groups.has(o.eintrag_id)) groups.set(o.eintrag_id, []);
+    groups.get(o.eintrag_id).push(o);
+  }
+  const have = new Set(store.entries.map((e) => e.id));
+  const del = new Set(store.deleted);
+  let added = 0, skipped = 0, bad = 0;
+  for (const [id, rs] of groups) {
+    if (have.has(id) || del.has(id)) { skipped++; continue; }
+    const e = buildEntry(rs);
+    if (!e) { bad++; continue; }
+    store.entries.push(e);
+    have.add(id);
+    added++;
+  }
+  sortEntries(store.entries);
+  persist();
+  render();
+  return { added, skipped, bad };
+}
+
+$('#csv-import').addEventListener('click', () => $('#csv-file').click());
+$('#csv-file').addEventListener('change', async (ev) => {
+  let added = 0, skipped = 0, bad = 0, err = 0;
+  for (const file of ev.target.files) {
+    const r = importCsv(await file.text());
+    if (r.error) { err++; continue; }
+    added += r.added; skipped += r.skipped; bad += r.bad;
+  }
+  ev.target.value = '';
+  toast(`Import: ${added} neu, ${skipped} schon vorhanden${bad ? `, ${bad} fehlerhaft` : ''}${err ? `, ${err} Datei(en) unbekannt` : ''}`);
+});
+
+// ---------- Menü, Gerät ----------
+
+function renderMenu() {
+  const n = store.entries.length;
+  const by = Object.keys(KIND_LABEL).map((k) => `${store.entries.filter((e) => e.kind === k).length} ${KIND_LABEL[k]}`).join(', ');
+  const exp = store.lastExport ? `Letzte CSV-Sicherung: ${timeLabel(store.lastExport)}` : 'Noch keine CSV gesichert.';
+  $('#menu-info').textContent = `${n} Einträge (${by}). ${exp}`;
+  const probe = typeof File === 'function' ? new File(['x'], 'x.csv', { type: 'text/csv' }) : null;
+  $('#csv-share').hidden = !(probe && navigator.canShare && navigator.canShare({ files: [probe] }));
+}
+
+$('#menu-btn').addEventListener('click', () => { $('#menu-ov').hidden = false; render(); });
+
+$('#wipe').addEventListener('click', () => {
+  if (!store.entries.length) { toast('Keine Daten vorhanden'); return; }
+  if (!confirm(`Alle ${store.entries.length} Einträge auf diesem Gerät löschen? Vorher CSV sichern!`)) return;
+  if (!confirm('Wirklich alles löschen? Das lässt sich nicht rückgängig machen.')) return;
+  store.entries.forEach((e) => store.deleted.push(e.id));
+  store.entries = [];
+  editing = null;
+  persist();
+  render();
+  toast('Alle Einträge gelöscht');
+});
+
+function openDevice() {
+  $('#device-input').value = store.device;
+  $('#menu-ov').hidden = true;
+  $('#device-ov').hidden = false;
+  setTimeout(() => $('#device-input').focus(), 50);
+}
+$('#device-btn').addEventListener('click', openDevice);
+$('#device-change').addEventListener('click', openDevice);
+const saveDevice = () => {
+  const v = $('#device-input').value.trim();
+  if (!v) { $('#device-input').focus(); return; }
+  store.device = v;
+  $('#device-ov').hidden = true;
+  persist();
+  render();
+};
+$('#device-save').addEventListener('click', saveDevice);
+$('#device-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveDevice(); });
+
+// Overlays: Schließen über ✕ oder Tippen neben das Fenster
+const closers = {
+  stone: closeStone,
+  history: () => { $('#history-ov').hidden = true; },
+  menu: () => { $('#menu-ov').hidden = true; },
+  layout: () => { layoutForm = null; $('#layout-ov').hidden = true; render(); },
+};
+$$('[data-close]').forEach((b) => b.addEventListener('click', () => closers[b.dataset.close]()));
+for (const [id, key] of [['#stone-ov', 'stone'], ['#history-ov', 'history'], ['#menu-ov', 'menu'], ['#layout-ov', 'layout']]) {
+  $(id).addEventListener('click', (e) => { if (e.target === e.currentTarget) closers[key](); });
+}
+
+// ---------- Toast ----------
+
+let toastTimer = null;
+function toast(text, action, fn) {
+  const el = $('#toast');
+  $('#toast-text').textContent = text;
+  const btn = $('#toast-action');
+  btn.hidden = !action;
+  btn.textContent = action || '';
+  btn.onclick = action ? () => { el.hidden = true; fn(); } : null;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, action ? 6000 : 3000);
+}
+
+// ---------- Start ----------
+
+window.addEventListener('storage', (e) => { if (e.key === KEY) syncFromStorage(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) syncFromStorage(); });
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
+$$('.stepper').forEach(initStepper);
+$('#version').textContent = `Version ${VERSION}`;
+persist();
+render();
+if (!store.device) $('#device-ov').hidden = false;
+</script>
+</body>
+</html>
